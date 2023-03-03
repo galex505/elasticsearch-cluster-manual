@@ -9,7 +9,7 @@ Performing Updates
 When updates are applied to the Analysis Cockpit, you also need to
 update all additional cluster nodes by running:
 
-code-block:: console
+.. code-block:: console
     
     nextron@es-node1:~$ sudo apt update
     nextron@es-node1:~$ sudo apt upgrade
