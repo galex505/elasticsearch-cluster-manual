@@ -1,0 +1,86 @@
+.. index:: Setup
+
+Analysis Cockpit Setup
+======================
+
+Prerequisites
+~~~~~~~~~~~~~
+
+Elasticsearch Cluster setup requires:
+
+* A fully functional installation of Analysis Cockpit version 3.4
+
+* At least two additional nodes with a similar high-end spec
+
+* High-performance low-latency networking between all nodes
+
+Analysis Cockpit preparation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After installation, the Analysis Cockpit runs with a single
+local Elasticsearch instance as usual. To prepare it for use with
+a cluster, run ``es-cluster-install.sh``:
+
+.. code-block:: console
+
+    nextron@cockpit3:~$ sudo /etc/nextron/analysiscockpit3/es-cluster-install.sh
+
+The script will configure Elasticsearch in the following way:
+
+* The Analysis Cockpit node continues to be the master node but data is automatically moved away from it once possible.
+
+* SSL certificates are used for authentication of nodes.
+
+* Any number of data nodes can be added with exactly the same configuration and certificate (as long as they are reachable).
+
+Resulting Elasticsearch configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Elasticsearch configuration can be found in ``/etc/elasticsearch/elasticsearch.yml``.
+It will look like the following:
+
+.. code-block:: yaml
+    :linenos:
+
+    cluster.name: elasticsearch
+    cluster.routing.allocation.exclude._name: elastic-test-01.nextron
+    path.data: /var/lib/elasticsearch
+    path.logs: /var/log/elasticsearch
+    node.roles: [ master, data, ingest ]
+    http.host: _local:ipv4_
+    transport.host: _site:ipv4_
+    discovery.seed_hosts: [ elastic-test-01.nextron ]
+    discovery.zen.minimum_master_nodes: 1
+    cluster.initial_master_nodes: [ elastic-test-01.nextron ]
+    xpack.security.transport.ssl.enabled: true
+    xpack.security.transport.ssl.verification_mode: certificate
+    xpack.security.transport.ssl.client_authentication: required
+    xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+    xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+
+The configuration:
+
+* designates the Analysis Cockpit node as the (only) cluster master.
+
+* automatically moves existing data away from the Analysis Cockpit node, and distributes it across the other nodes.
+
+* TLS security is enabled so that nodes authenticate by certificate.
+
+
+Cluster Node configuration script
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to reconfiguring the Analysis Cockpit, ``es-cluster-install.sh`` will
+create a script es-node-install.sh that contains the required configuration for
+additional nodes to join the cluster.
+
+
+Restarting Elasticsearch
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Finally, restart elasticsearch so that it picks up the new configuration:
+
+.. code-block:: console
+
+    nextron@cockpit3:~$ sudo systemctl restart elasticsearch
+
