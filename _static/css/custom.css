@@ -3,40 +3,40 @@
 }
 
 .wy-menu-vertical header, .wy-menu-vertical p.caption {
-    color: #d72f32;
+    color: #2cc0ee;
 }
 
 .wy-table-responsive table td, .wy-table-responsive table th {
-        white-space: normal;
+    white-space: normal;
 }
 
 .rst-versions a {
-    color: #d72f32;
+    color: #2cc0ee;
 }
 
 a {
-    color: #d72f32;
+    color: #2cc0ee;
 }
 
 a:hover {
-    color: #da2c2f;
+    color: #2cc0ee;
 }
 
 .rst-content .section a:visited {
-    color: #9c2224;
+    color: #2cc0ee;
 }
 
 .wy-breadcrumbs li a {
-    color: #d72f32;
+    color: #2cc0ee;
 }
 
 .rst-content table.docutils thead th, .rst-content table.field-list thead th, .wy-table thead th {
-    background-color: #d72f32;
+    background-color: #2cc0ee;
     color: #fff;
 }
 
 .rst-versions .rst-current-version {
-    color: #d72f32;
+    color: #2cc0ee;
 }
 
 code {

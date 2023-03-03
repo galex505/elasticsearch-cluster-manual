@@ -55,13 +55,19 @@ html_theme_options = {
     'style_external_links': True
 }
 
-html_logo = "images/html/asgard-logo.png"
+html_logo = "images/html/cockpit-logo.png"
 html_favicon = "images/html/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
 
 autosectionlabel_prefix_document = True
 autosectionlabel_maxdepth = 3
