@@ -40,7 +40,8 @@ value of "node_to_remove" to the actual node name):
 
 .. code-block:: console
 
-    nextron@es-node1:~$ curl -XPUT “http://127.0.0.1:9200/_cluster/settings” -d '{"transient": {"cluster.routing.allocation.exclude._name": "node_to_remove"} }'
+    nextron@es-node1:~$ curl -X PUT "http://127.0.0.1:9200/_cluster/settings" \
+      -d '{"transient": {"cluster.routing.allocation.exclude._name": "node_to_remove"} }'
 
 Then wait until the node has no shards left:
 

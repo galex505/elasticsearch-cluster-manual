@@ -8,7 +8,7 @@ Prerequisites
 
 Elasticsearch Cluster setup requires:
 
-* A fully functional installation of Analysis Cockpit version 3.4
+* A fully functional installation of Analysis Cockpit version 4.x
 
 * At least two additional nodes with a similar high-end spec
 
@@ -23,7 +23,7 @@ a cluster, run ``es-cluster-install.sh``:
 
 .. code-block:: console
 
-    nextron@cockpit3:~$ sudo /etc/nextron/analysiscockpit3/es-cluster-install.sh
+    nextron@cockpit4:~$ sudo /usr/share/asgard-analysis-cockpit/scripts/es-cluster-setup.sh
 
 The script will configure Elasticsearch in the following way:
 
@@ -47,16 +47,20 @@ It will look like the following:
     path.data: /var/lib/elasticsearch
     path.logs: /var/log/elasticsearch
     node.roles: [ master, data, ingest ]
-    http.host: _local:ipv4_
-    transport.host: _site:ipv4_
+    http.host: "_local:ipv4_"
+    transport.host: "_site:ipv4_"
     discovery.seed_hosts: [ elastic-test-01.nextron ]
-    discovery.zen.minimum_master_nodes: 1
     cluster.initial_master_nodes: [ elastic-test-01.nextron ]
-    xpack.security.transport.ssl.enabled: true
-    xpack.security.transport.ssl.verification_mode: certificate
-    xpack.security.transport.ssl.client_authentication: required
-    xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
-    xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+    search.default_allow_partial_results: false
+    xpack.security.enabled: true
+    xpack.security.enrollment.enabled: false
+    xpack.security.http.ssl.enabled: false
+    xpack.security.transport.ssl:
+      enabled: true
+      verification_mode: certificate
+      client_authentication: required
+      keystore.path: /etc/elasticsearch/elastic-certificates.p12
+      truststore.path: /etc/elasticsearch/elastic-certificates.p12
 
 The configuration:
 
@@ -70,10 +74,9 @@ The configuration:
 Cluster Node configuration script
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In addition to reconfiguring the Analysis Cockpit, ``es-cluster-install.sh`` will
+In addition to reconfiguring the Analysis Cockpit, ``es-cluster-setup.sh`` will
 create a script es-node-install.sh that contains the required configuration for
 additional nodes to join the cluster.
-
 
 Restarting Elasticsearch
 ~~~~~~~~~~~~~~~~~~~~~~~~
