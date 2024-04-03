@@ -1,25 +1,28 @@
-.. index:: Setup
+.. index:: Analysis Cockpit Setup
 
 Analysis Cockpit Setup
 ======================
+
+.. warning::
+    The Cluster Installation is currently not possible due to
+    the update of version 4 of the Analysis Cockpit. We will soon
+    release a new ISO which will fix this.
 
 Prerequisites
 ~~~~~~~~~~~~~
 
 Elasticsearch Cluster setup requires:
 
-* A fully functional installation of Analysis Cockpit version 4.x
-
-* At least two additional nodes with a similar high-end spec
-
-* High-performance low-latency networking between all nodes
+- A fully functional installation of Analysis Cockpit version 4.x
+- At least two additional nodes with a similar high-end spec
+- High-performance low-latency networking between all nodes
 
 Analysis Cockpit preparation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After installation, the Analysis Cockpit runs with a single
 local Elasticsearch instance as usual. To prepare it for use with
-a cluster, run ``es-cluster-install.sh``:
+a cluster, run ``es-cluster-setup.sh``:
 
 .. code-block:: console
 
@@ -27,11 +30,9 @@ a cluster, run ``es-cluster-install.sh``:
 
 The script will configure Elasticsearch in the following way:
 
-* The Analysis Cockpit node continues to be the master node but data is automatically moved away from it once possible.
-
-* SSL certificates are used for authentication of nodes.
-
-* Any number of data nodes can be added with exactly the same configuration and certificate (as long as they are reachable).
+- The Analysis Cockpit node continues to be the master node but data is automatically moved away from it once possible.
+- SSL certificates are used for authentication of nodes.
+- Any number of data nodes can be added with exactly the same configuration and certificate (as long as they are reachable).
 
 Resulting Elasticsearch configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -64,19 +65,20 @@ It will look like the following:
 
 The configuration:
 
-* designates the Analysis Cockpit node as the (only) cluster master.
+- Designates the Analysis Cockpit node as the (only) cluster master.
+- Automatically moves existing data away from the Analysis Cockpit node, and distributes it across the other nodes.
+- TLS security is enabled so that nodes authenticate by certificate.
 
-* automatically moves existing data away from the Analysis Cockpit node, and distributes it across the other nodes.
-
-* TLS security is enabled so that nodes authenticate by certificate.
-
-
-Cluster Node configuration script
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cluster Node configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In addition to reconfiguring the Analysis Cockpit, ``es-cluster-setup.sh`` will
-create a script es-node-install.sh that contains the required configuration for
-additional nodes to join the cluster.
+create a configuration file ``clusternode.conf`` which contains the required
+configuration for additional nodes to join the cluster. The file can be found
+on your Analysis Cockpit in ``/usr/share/asgard-analysis-cockpit/scripts/clusternode.conf``.
+
+Download this configuration file for further usage in our Nextron
+Universal Installer
 
 Restarting Elasticsearch
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,3 +89,4 @@ Finally, restart elasticsearch so that it picks up the new configuration:
 
     nextron@cockpit3:~$ sudo systemctl restart elasticsearch
 
+Your Analysis Cockpit is now ready to be used in a cluster setup.
