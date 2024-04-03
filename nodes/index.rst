@@ -1,94 +1,162 @@
-.. index:: Nodes
+.. index:: Cluster Node
 
-Cluster Node setup
+Cluster Node Setup
 ==================
 
-Prerequisites
-~~~~~~~~~~~~~
+.. warning::
+    The Cluster Installation is currently not possible due to
+    the update of version 4 of the Analysis Cockpit. We will soon
+    release a new ISO which will fix this.
 
-The following prerequisites have to be given:
+Nextron Universal Installer
+---------------------------
 
-* Server must be suitable for the Nextron base image.
+The Nextron Universal Installer is a web based installer
+which will guide you through the installation of our
+ASGARD products. The Nextron Universal Installer will install
+**one** of the following products on your server (this manual
+focuses on the ``Elasticsearch Cluster Node for ASGARD Analysis Cockpit``):
 
-* All nodes must be able to reach each other by resolving the fully qualified host name.
+- ASGARD Management Center; alternatively if your license permits:
+  
+  * ASGARD Broker
+  * ASGARD Gatekeeper
+  * ASGARD Lobby
 
-* TCP port 9300 must be open between all nodes (Note: API port 9200 is only used locally).
+- ASGARD Analysis Cockpit; alternatively:
+  
+  * Elasticsearch Cluster Node for ASGARD Analysis Cockpit
 
-Elasticsearch node installation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- ASGARD Security Center, in the following variants:
 
-Install the server from the Nextron ISO base image as you normally would
-when installing the Analysis Cockpit itself, but **DO NOT** run the Nextron Installer.
+  * ASGARD Security Center (Backend Only)
+  * ASGARD Security Center (Frontend Only)
+  * ASGARD Security Center (All-in-one, unrecommended)
 
-Instead, copy ``/usr/share/asgard-analysis-cockpit/scripts/es-node-install.sh``
-to the new node and run it:
+.. note::
+   You can only install one product on one server, since the
+   products are not designed to coexist on the same server.
+   The exception being the ASGARD Security Center (All-in-one).
 
-.. code-block:: console
+The installation takes roughly between 5-15 minutes, depending
+on your internet connection and the server you are installing
+the product on.
 
-    nextron@es-node1:~$ chmod +x es-node-install.sh
-    nextron@es-node1:~$ sudo ./es-node-install.sh
+If you encounter problems during your installation, please see
+:ref:`nodes/index:diagnostic pack` for further instructions.
 
-The script will automatically install Elasticsearch and configure the node to
-join the cluster with the Analysis Cockpit host as its master.
+Requirements
+------------
 
-Resulting Elasticsearch configuration
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The installation of the ``Elasticsearch Cluster Node for ASGARD
+Analysis Cockpit`` requires the following:
 
-The Elasticsearch configuration can be found in ``/etc/elasticsearch/elasticsearch.yml``.
-It will look like the following:
+- A valid license file for the ASGARD Analysis Cockpit
+- A configured FQDN with working DNS resolution
+- Internet access during installation (see :ref:`nodes/index:connectivity check`)
+- All nodes must be able to reach each other by resolving the fully qualified host name.
+- TCP port 9300 must be open between all nodes.
 
-.. code-block:: yaml
-    :linenos:
+Installation
+------------
 
-    cluster.name: elasticsearch
-    cluster.routing.allocation.exclude._name: elastic-test-01.nextron
-    path.data: /var/lib/elasticsearch
-    path.logs: /var/log/elasticsearch
-    node.roles: [ data, ingest ]
-    http.host: "_local:ipv4_"
-    transport.host: "_site:ipv4_"
-    discovery.seed_hosts: [ elastic-test-01.nextron ]
-    search.default_allow_partial_results: false
-    xpack.security.http.ssl.enabled: false
-    xpack.security.enrollment.enabled: false
-    xpack.security.transport.ssl:
-        enabled: true
-        verification_mode: certificate
-        client_authentication: required
-        keystore.path: elastic-certificates.p12
-        truststore.path: elastic-certificates.p12
+Install the server from the Nextron ISO base image as
+you normally would when installing the Analysis Cockpit
+itself.
 
-Enabling the node
-~~~~~~~~~~~~~~~~~
+After the ISO installer is finished with the setup,
+you will be greeted at the console login prompt with
+the following message:
 
-After the installation, restart elasticsearch:
+.. figure:: ../images/setup_nextronInstaller.png
+   :alt: Login prompt ASGARD Server
 
-.. code-block:: console
+Follow the instructions and navigate to the webpage
+displayed on your console. You will most likely get
+a browser warning when you connect the first time to
+the page. This is due to the page using a self signed
+certificate, since it will only be used to install the
+Elasticsearch Cluster Node. You can safely ignore this
+warning and proceed to the page.
 
-    nextron@es-node1:~$ sudo systemctl restart elasticsearch.service
+You will be greeted with a small introduction as to what
+the Nextron Universal Installer is and what it does. After
+you click ``Next``, you will be presented with the landing
+page of the Nextron Universal Installer.
 
-The node should automatically join the cluster. To check if the node has
-joined the cluster, run the following command (``number_of_nodes`` should
-be 1+X, where X is the number of nodes you have added):
+.. figure:: ../images/setup_nextronInstaller-landing.png
+   :alt: landing page of the Universal Installer
 
-.. code-block:: console
-    :emphasize-lines: 6
+Enter the Installation Code from the terminal and click
+``Next``. The Installer will now guide you through the
+installation.
 
-    nextron@cockpit4:~$ curl -s http://127.0.0.1:9200/_cluster/health | jq
-    {
-      "cluster_name": "elasticsearch",
-      "status": "green",
-      "timed_out": false,
-      "number_of_nodes": 4,
-      "number_of_data_nodes": 4,
-      "active_primary_shards": 10,
-      "active_shards": 20,
-      "relocating_shards": 0,
-      "initializing_shards": 0,
-      "unassigned_shards": 8,
-      "delayed_unassigned_shards": 0,
-      "number_of_pending_tasks": 0,
-      "number_of_in_flight_fetch": 0,
-      "task_max_waiting_in_queue_millis": 0,
-      "active_shards_percent_as_number": 71.42857142857143
-    }
+You will be prompted at one point to upload your cluster
+configuration file. This file is generated by the Analysis
+Cockpit and contains all the necessary information for
+the Elasticsearch Cluster Node to join the cluster.
+
+Please see :ref:`setup/index:resulting elasticsearch configuration`
+for further information on how to generate the cluster configuration
+file.
+
+Once the installation is finished, your Cluster Node is
+a part of the Analysis Cockpit cluster and will start
+receiving data.
+
+Connectivity Check
+------------------
+
+The Nextron Universal Installer will try to connect to our
+update server in order to download all the necessary packages
+once the installation starts. Make sure you can reach the
+update servers (TCP/443 on update-301.nextron-systems.com).
+
+Please configure your proxy settings if you are behind a
+proxy (see :ref:`nodes/index:proxy and ntp settings`).
+
+Valid FQDN
+----------
+
+The Nextron Universal Installer will prompt you to verify the
+FQDN which you configured during the installation of the base
+system. This is needed in order for your server to communicate
+via a HTTPs connection with the Analysis Cockpit and other
+Cluster Nodes. 
+
+If the displayed FQDN is not correct, you can change it by
+clicking on the ``View FQDN Change Instructions`` button.
+This will open a dialog with instructions on how to change
+the FQDN of your server. Once you have changed the FQDN,
+you can continue with the installation.
+
+.. figure:: ../images/setup_nextronInstaller-fqdn.png
+   :alt: FQDN Verification of the Universal Installer
+
+Proxy and NTP Settings
+----------------------
+
+If you need to configure a proxy or change the NTP settings
+of your system, you can do so by clicking on the ``Settings``
+button in the left menu of the Nextron Universal Installer.
+
+.. figure:: ../images/setup_nextronInstaller-settings.png
+   :alt: Settings of the Universal Installer
+
+If you configured a proxy during the ISO installation, those
+settings will be carried over into the Universal Installer.
+The settings will also be carried over into your ASGARD
+Management Center. The same goes for NTP.
+
+Diagnostic Pack
+---------------
+
+In case of errors or problems during the installation, you can
+download a diagnostic pack by navigating to the ``Diagnostics``
+tab in the left menu of the Nextron Universal Installer. Click
+on the ``Download Diagnostic Pack`` button to download the
+diagnostic pack. You can then send the diagnostic pack to our
+support team for further analysis.
+
+.. figure:: ../images/setup_nextronInstaller-diagnostics.png
+   :alt: Diagnostics of the Universal Installer
