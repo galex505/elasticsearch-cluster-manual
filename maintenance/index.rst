@@ -30,6 +30,7 @@ You can check elasticsearch status and index distribution on any of the nodes:
     root@cockpit4:~# curl -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) http://127.0.0.1:9200/_cat/health
     root@cockpit4:~# curl -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) http://127.0.0.1:9200/_cat/nodes
     root@cockpit4:~# curl -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) http://127.0.0.1:9200/_cat/shards
+    root@cockpit4:~# curl -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) http://127.0.0.1:9200/_cluster/health | jq
 
 Removing Elasticsearch nodes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,7 +43,9 @@ value of "node_to_remove" to the actual node name):
 
 .. code-block:: console
 
-    nextron@cockpit4:~$ curl -X PUT "http://127.0.0.1:9200/_cluster/settings" \
+    nextron@cockpit4:~$ sudo su -
+    [sudo] password for nextron:
+    root@cockpit4:~$ curl -X PUT "http://127.0.0.1:9200/_cluster/settings" \
       -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) \
       -H "Content-Type: application/json" \
       -d '{"transient": {"cluster.routing.allocation.exclude._name": "node_to_remove"} }'
@@ -52,7 +55,7 @@ Then wait until the node has no shards left:
 
 .. code-block:: console
 
-    nextron@cockpit4:~$ curl http://127.0.0.1:9200/_cat/shards
+    nextron@cockpit4:~$ curl -u elastic:$(cat /etc/asgard-analysis-cockpit/elastic.password) http://127.0.0.1:9200/_cat/shards
 
 Once no shards are assigned to the node, it is safe to shut it down. When you have
 replicas of each index (number_of_replicas >= 1), the cluster should automatically
