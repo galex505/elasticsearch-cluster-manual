@@ -3,10 +3,8 @@
 Cluster Node Setup
 ==================
 
-.. warning::
-    The Cluster Installation is currently not possible due to
-    the update of version 4 of the Analysis Cockpit. We will soon
-    release a new ISO which will fix this.
+This chapter will guide you through the installation of the
+Elasticsearch Cluster Node for the ASGARD Analysis Cockpit.
 
 Nextron Universal Installer
 ---------------------------
@@ -22,6 +20,8 @@ focuses on the ``Elasticsearch Cluster Node for ASGARD Analysis Cockpit``):
   * ASGARD Broker
   * ASGARD Gatekeeper
   * ASGARD Lobby
+
+- Master ASGARD
 
 - ASGARD Analysis Cockpit; alternatively:
   

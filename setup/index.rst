@@ -3,15 +3,14 @@
 Analysis Cockpit Setup
 ======================
 
-.. warning::
-    The Cluster Installation is currently not possible due to
-    the update of version 4 of the Analysis Cockpit. We will soon
-    release a new ISO which will fix this.
+This chapter walks you through the necessary
+steps to set up the Analysis Cockpit for use
+with a cluster of Elasticsearch nodes.
 
 Prerequisites
 ~~~~~~~~~~~~~
 
-Elasticsearch Cluster setup requires:
+The Elasticsearch Cluster setup requires:
 
 - A fully functional installation of Analysis Cockpit version 4.x
 - At least two additional nodes with a similar high-end spec
@@ -87,7 +86,7 @@ If you executed the script as root user, the file will be located in
 ``/usr/share/asgard-analysis-cockpit/scripts/clusternode.conf``.
 
 Download this configuration file for further usage in our Nextron
-Universal Installer (:ref:`nodes/index:installation`).
+Universal Installer (:ref:`nodes/index:cluster node setup`).
 
 Restarting Elasticsearch
 ~~~~~~~~~~~~~~~~~~~~~~~~
