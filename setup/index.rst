@@ -95,6 +95,6 @@ Finally, restart elasticsearch so that it picks up the new configuration:
 
 .. code-block:: console
 
-    nextron@cockpit3:~$ sudo systemctl restart elasticsearch
+    nextron@cockpit4:~$ sudo systemctl restart elasticsearch
 
 Your Analysis Cockpit is now ready to be used in a cluster setup.
