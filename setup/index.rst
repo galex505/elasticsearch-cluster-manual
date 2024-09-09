@@ -83,7 +83,7 @@ configuration for additional nodes to join the cluster. The file can be found
 on your Analysis Cockpit in the home directory of the nextron user (``/home/nextron``).
 
 If you executed the script as root user, the file will be located in
-``/usr/share/asgard-analysis-cockpit/scripts/clusternode.conf``.
+``/etc/asgard-analysis-cockpit/clusternode.conf``.
 
 Download this configuration file for further usage in our Nextron
 Universal Installer (:ref:`nodes/index:cluster node setup`).
