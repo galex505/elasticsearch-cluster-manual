@@ -7,7 +7,7 @@ Performing Updates
 ~~~~~~~~~~~~~~~~~~
 
 When updates are applied to the Analysis Cockpit, you also need to
-update all additional cluster nodes by running:
+update all additional cluster nodes by running the following commands:
 
 .. code-block:: console
     
